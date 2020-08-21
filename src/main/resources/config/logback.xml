@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="log.dir" value="/app/bighead/transform/log/" />
+    <timestamp key="ymd" datePattern="yyyy-MM-dd"/>
+    <timestamp key="byMillionSecond" datePattern="HH_mm_ss"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <Encoding>UTF-8</Encoding>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <encoder>UTF-8</encoder>
+        <file>${log.dir}/info_${ymd}.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- error文件日志 -->
+    <appender name="errorFile" class="ch.qos.logback.core.FileAppender">
+        <!-- 过滤日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %msg%n
+            </pattern>
+        </encoder>
+        <!--日志文件输出的文件名-->
+        <file>${log.dir}/error_${ymd}.log</file>
+        <append>true</append>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- WARN文件日志 -->
+    <appender name="warnFile" class="ch.qos.logback.core.FileAppender">
+        <!-- 过滤日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %msg%n
+            </pattern>
+        </encoder>
+        <!--日志文件输出的文件名-->
+        <file>${log.dir}/warn_${ymd}.log</file>
+        <append>true</append>
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="${loglevel:-INFO}">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="errorFile" />
+        <appender-ref ref="warnFile" />
+        <!--
+        <appender-ref ref="USER_FILE" />
+        <appender-ref ref="BAD_RECORD_FILE" />
+        <appender-ref ref="DEV_FILE" />
+        <appender-ref ref="DEBUG_FILE" />
+        -->
+    </root>
+</configuration>
